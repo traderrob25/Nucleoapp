@@ -1,0 +1,9 @@
+/* Auth shell — layout centrado sin sidebar */
+.shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 1.5rem;
+}
