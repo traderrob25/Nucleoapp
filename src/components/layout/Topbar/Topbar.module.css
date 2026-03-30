@@ -1,0 +1,81 @@
+/* Topbar — barra superior fija, 52px */
+
+.topbar {
+  height: var(--topbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* ── Izquierda ───────────────────────────────────────────────── */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.brand {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.divider {
+  width: 1px;
+  height: 16px;
+  background: var(--border);
+}
+
+.agency {
+  font-size: 0.8125rem;
+  color: var(--text2);
+  font-weight: 400;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Derecha ─────────────────────────────────────────────────── */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.email {
+  font-size: 0.75rem;
+  color: var(--text2);
+  font-family: var(--mono);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logoutBtn {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text2);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.625rem;
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms;
+  font-family: var(--font);
+}
+
+.logoutBtn:hover {
+  color: var(--text);
+  border-color: var(--text3);
+}
