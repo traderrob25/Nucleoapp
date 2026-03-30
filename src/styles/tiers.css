@@ -1,0 +1,27 @@
+/* =============================================================
+   TIER CLASSES — NucleoApp / De CAOS a CEO
+   v1.0 · 2026-03-30
+   Uso: clase aplicada al <body> desde el layout de dashboard
+        Leído SOLO desde Supabase — nunca hardcodeado en frontend
+   ============================================================= */
+
+/* ── Tier: Parche (entrada) ─────────────────────────────────── */
+body.tier-parche {
+  --tier-color:  #7A8C9E;
+  --tier-label:  'Parche';
+  --tier-glow:   rgba(122, 140, 158, 0.15);
+}
+
+/* ── Tier: Operador (mid) ───────────────────────────────────── */
+body.tier-operador {
+  --tier-color:  #0891B2;
+  --tier-label:  'Operador';
+  --tier-glow:   rgba(8, 145, 178, 0.20);
+}
+
+/* ── Tier: CEO (premium) ────────────────────────────────────── */
+body.tier-ceo {
+  --tier-color:  #D4961A;
+  --tier-label:  'CEO';
+  --tier-glow:   rgba(212, 150, 26, 0.20);
+}
