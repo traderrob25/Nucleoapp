@@ -3,44 +3,41 @@
 
 ---
 
-## [Unreleased] — TASK-011 pendiente
+## [Unreleased] — Fase 3 en curso
 
 ### En progreso
-- TASK-011: Make.com Scenario 1 — Velocity Agent scoring
+- TASK-012: intake-analyzer skill
+- TASK-013: playbook-mapper skill
+- TASK-014: proposal-writer skill
 
 ---
 
-## [0.4.0] — 2026-03-31 · Fase 2 parcial ✅
+## [0.5.0] — 2026-03-31 · Fase 2 completa ✅
 
 ### Added
 - `feat: IntakeForm Server Action → leads con Zod v4`
 - `feat: LeadsTable con datos reales`
 - `feat: PipelineStages con conteos reales`
-- `feat: KpiCards con métricas reales`
-- Command Center completo en producción con datos reales
+- `feat: KpiCards con métricas reales` (Promise.all)
+- `feat: Velocity Agent webhook + Claude API scoring` (09d183a)
+- Make.com scenario: NucleoApp Leads configurado
+- Supabase Database Webhook: velocity-new-lead activo
 
 ### Fixed
 - Zod v4: `.issues` en lugar de `.errors`
-- Libro Express migrado a hexada-prod → ScalingUp exclusivo NucleoApp
+- Auto-provision account tier 'parche' en Server Action
+- Libro Express migrado a hexada-prod
 - Supabase Site URL → nucleoapp.vercel.app
-- Auto-provision account con tier 'parche' en Server Action
+- Score Claudio confirmado: 25 (Referido +25)
 
-### Infra
-- Promise.all para queries paralelas en overview/page.tsx
-- Orden visual: KpiCards → PipelineStages → IntakeForm → LeadsTable
-
----
-
-## [0.3.0] — 2026-03-30 · Fase 1 completa ✅
-
-### Added
-- Next.js 16 App Router + design tokens
-- Supabase schema v1 con RLS
-- Auth Magic Link con proxy.ts
-- Dashboard shell: Topbar, Sidebar, RightPanel
-- Deploy → nucleoapp.vercel.app
-- Resend SMTP (onboarding@resend.dev)
+### Architecture
+- Velocity Agent flujo completo en producción:
+  IntakeForm → Supabase → Make.com → /api/leads/webhook → Claude API → score
+- service_role_key para writes de sistema en webhook
+- generateScore() en lib/api/velocity.ts aislado y reutilizable
 
 ---
 
+## [0.4.0] — 2026-03-31 · Fase 2 parcial
+## [0.3.0] — 2026-03-30 · Fase 1 completa
 ## [0.1.0–0.2.0] — 2026-03-30 · Prototipo + Gobernanza

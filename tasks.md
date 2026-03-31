@@ -1,9 +1,9 @@
 # tasks.md — De CAOS a CEO / NucleoApp
-> v1.3 · 2026-03-31 · Fase 2 parcial ✅ · TASK-011 pendiente
+> v1.4 · 2026-03-31 · Fase 2 ✅ COMPLETA · Fase 3 abierta
 
 ---
 
-## ✅ FASE 1 COMPLETA
+## ✅ FASE 1 COMPLETA · 2026-03-30
 
 | Task | Descripción | Estado |
 |---|---|---|
@@ -16,108 +16,110 @@
 
 ---
 
-## ✅ FASE 2 — TASKS COMPLETAS
+## ✅ FASE 2 COMPLETA · 2026-03-31
 
 | Task | Descripción | Commit | Estado |
 |---|---|---|---|
-| TASK-007 | IntakeForm Server Action → leads | feat: IntakeForm Server Action → leads con Zod v4 | ✅ |
-| TASK-008 | LeadsTable con datos reales | feat: LeadsTable con datos reales | ✅ |
-| TASK-009 | PipelineStages con conteos reales | feat: PipelineStages con conteos reales | ✅ |
-| TASK-010 | KpiCards con métricas reales | feat: KpiCards con métricas reales | ✅ |
+| TASK-007 | IntakeForm Server Action → leads | feat: IntakeForm Server Action | ✅ |
+| TASK-008 | LeadsTable con datos reales | feat: LeadsTable datos reales | ✅ |
+| TASK-009 | PipelineStages con conteos reales | feat: PipelineStages conteos reales | ✅ |
+| TASK-010 | KpiCards con 4 métricas reales | feat: KpiCards métricas reales | ✅ |
+| TASK-011 | Velocity Agent → Claude API scoring | feat: Velocity Agent webhook + Claude API scoring (09d183a) | ✅ |
 
 **Notas técnicas Fase 2:**
-- Zod v4: `.issues` en lugar de `.errors` (fix aplicado en TASK-007)
-- Auto-provision de account con tier 'parche' si no existe
-- Promise.all para queries paralelas en TASK-010
-- Libro Express migrado a hexada-prod — ScalingUp exclusivo para NucleoApp
-- Supabase Site URL actualizada a nucleoapp.vercel.app
+- Zod v4: `.issues` en lugar de `.errors`
+- Auto-provision account con tier 'parche' en Server Action
+- Promise.all para queries paralelas en KpiCards
+- Libro Express migrado a hexada-prod — ScalingUp exclusivo NucleoApp
+- Velocity Agent: score calculado por Claude API (claude-sonnet-4-20250514)
+- Supabase webhook → Make.com → /api/leads/webhook → UPDATE score
+- Score de Claudio confirmado: 25 (Referido +25, presupuesto < $5k +0)
+- Make.com scenario: activar toggle ON para scoring automático
+
+**Flujo Velocity Agent en producción:**
+```
+IntakeForm submit
+→ INSERT leads (score=0)
+→ Supabase pg_net → Make.com webhook
+→ Make.com POST /api/leads/webhook
+→ Claude API genera score 0-100
+→ UPDATE leads SET score
+→ LeadsTable muestra score real
+```
 
 ---
 
-## 🔴 TAREA ACTIVA — TASK-011
+## 🔴 TAREA ACTIVA — TASK-012
 
-**Make.com Scenario 1 — Velocity Agent scoring**
+**intake-analyzer skill — Claude API + Supabase**
 
 ```
-PREREQUISITOS (hacer antes de abrir IDX):
-  1. Cuenta en make.com activa
-  2. ANTHROPIC_API_KEY disponible
-  3. Agregar a Vercel env vars:
-     ANTHROPIC_API_KEY=
-     MAKE_WEBHOOK_INTAKE=  (se obtiene al crear el scenario)
+Fase: 3 — Skills IA (internos)
 
-ARCHIVOS A CREAR:
-  src/app/api/leads/webhook/route.ts
-  src/lib/api/velocity.ts
+Archivos a crear:
+  src/lib/skills/intake-analyzer.ts
+  src/app/api/skills/intake-analyzer/route.ts
 
-FLUJO MAKE.COM:
-  Trigger: Watch New Row en tabla leads (Supabase)
-  → HTTP POST a /api/leads/webhook
-    body: { lead_id, name, service, budget, source }
-  → Next.js llama Claude API con prompt de scoring
-  → Score 0-100 generado
-  → UPDATE leads SET score = $score WHERE id = $lead_id
-  → Supabase actualiza el registro
+Función:
+  Leer datos completos de un lead desde Supabase
+  → Analizar con Claude API
+  → Retornar:
+    {
+      tier_recomendado: 'parche' | 'operador' | 'ceo',
+      score: number,
+      razon: string,
+      puntos_fuertes: string[],
+      puntos_debiles: string[],
+      siguiente_accion: string
+    }
+  → Guardar en skill_outputs (tabla ya existe en Supabase)
 
-FLUJO NEXT.JS (webhook/route.ts):
-  POST /api/leads/webhook
-  → Validar body con Zod
-  → Llamar lib/api/velocity.ts → Claude API
-  → UPDATE leads SET score en Supabase
-  → Return { success: true, score }
-
-PROMPT DE SCORING (en velocity.ts):
-  Analiza este lead de agencia digital:
-  - Nombre: {name}
-  - Servicio de interés: {service}
-  - Presupuesto: {budget}
-  - Fuente: {source}
-  Devuelve SOLO un número entero entre 0 y 100
-  representando la probabilidad de cierre.
-  0 = muy baja, 100 = muy alta.
-  Considera: presupuesto alto = más puntos,
-  referido = más puntos, servicio específico = más puntos.
-
-CRITERIO DE DONE:
-  ✓ Nuevo lead registrado en IntakeForm
-  ✓ Make.com detecta el nuevo registro
-  ✓ /api/leads/webhook recibe el POST
-  ✓ Claude API genera score
-  ✓ lead.score actualizado en Supabase < 30 segundos
-  ✓ LeadsTable muestra score actualizado (revalidatePath o refresh)
+Criterio de done:
+  ✓ POST /api/skills/intake-analyzer con lead_id → análisis completo
+  ✓ Output guardado en skill_outputs
+  ✓ Sin errores TypeScript
 ```
 
 ---
 
 ## 📋 BACKLOG FASE 3
 
-### TASK-012 — intake-analyzer skill
 ### TASK-013 — playbook-mapper skill
+```
+Input: output de intake-analyzer
+Output: lista priorizada de playbooks con justificación
+```
+
 ### TASK-014 — proposal-writer skill
+```
+Input: tier + playbooks + precios
+Output: diagnóstico narrativo + propuesta 1 página (markdown)
+Guardar en skill_outputs
+```
 
 ---
 
-## 📌 Prompt de Inicio — TASK-011
+## 📌 Prompt de Inicio — Fase 3
 
 ```
-[INICIO DE SESIÓN — Fase 2 · TASK-011]
+[INICIO DE SESIÓN — Fase 3 · TASK-012]
 
 Proyecto: NucleoApp / De CAOS a CEO
 URL: nucleoapp.vercel.app
-Fase actual: 2 — Make.com + Velocity Agent scoring
-Tarea activa: TASK-011
+Fase actual: 3 — Skills IA internos
+Tarea activa: TASK-012 — intake-analyzer skill
 
-Stack: Next.js 16 · Supabase · Make.com · Claude API
-ANTHROPIC_API_KEY debe estar en Vercel env vars antes de empezar
+Stack: Next.js 16 · Supabase · Claude API (claude-sonnet-4-20250514)
+ANTHROPIC_API_KEY ya está en Vercel env vars ✅
 
 Reglas:
 - Plan → Confirm → Code
 - Max ~300 líneas por archivo
-- Make.com scenario se configura manualmente en make.com
-- El webhook URL es: https://nucleoapp.vercel.app/api/leads/webhook
+- Output de skills se guarda en tabla skill_outputs
+- Usar SUPABASE_SERVICE_ROLE_KEY para writes de sistema
 
 Lee CLAUDE.md → confirma:
-"Entendido. Fase 2 · TASK-011 · Modo DEV. ¿Arrancamos?"
+"Entendido. Fase 3 · TASK-012 · Modo DEV. ¿Arrancamos?"
 ```
 
 ---
@@ -127,6 +129,6 @@ Lee CLAUDE.md → confirma:
 | Fecha | Nota |
 |---|---|
 | 2026-03-30 | Fase 1 completa. nucleoapp.vercel.app live. |
-| 2026-03-31 | TASK-007–010 completas. Command Center con datos reales en producción. |
-| 2026-03-31 | Libro Express migrado a hexada-prod. ScalingUp exclusivo NucleoApp. |
-| — | Próxima sesión: TASK-011 Make.com + Velocity Agent |
+| 2026-03-31 | Fase 2 completa. Command Center + Velocity Agent en producción. |
+| 2026-03-31 | Make.com scenario configurado. Activar toggle ON para scoring automático. |
+| — | Próxima sesión: TASK-012 — intake-analyzer skill |
