@@ -1,0 +1,144 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sectionLabel {
+  font-size: 0.7rem;
+  font-family: var(--mono);
+  color: var(--text3);
+  letter-spacing: 0.05em;
+}
+
+.tableWrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  color: var(--text);
+}
+
+.table thead tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  padding: 0.625rem 1rem;
+  text-align: left;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 0.75rem 1rem;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover td {
+  background: var(--surface2);
+}
+
+.name {
+  color: var(--text) !important;
+  font-weight: 500;
+}
+
+.date {
+  font-family: var(--mono);
+  font-size: 0.75rem !important;
+}
+
+/* ── Score badge ──────────────────────────────────── */
+.scoreBadge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.scoreHigh {
+  background: rgba(8, 145, 178, 0.15);
+  color: var(--accent);
+}
+
+.scoreMid {
+  background: rgba(245, 166, 35, 0.12);
+  color: var(--warn);
+}
+
+.scoreLow {
+  background: rgba(46, 67, 85, 0.4);
+  color: var(--text3);
+}
+
+/* ── Status tag ───────────────────────────────────── */
+.statusTag {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: capitalize;
+}
+
+.statusNuevo {
+  background: rgba(46, 67, 85, 0.4);
+  color: var(--text3);
+}
+
+.statusContactado {
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--info);
+}
+
+.statusCaliente {
+  background: rgba(8, 145, 178, 0.15);
+  color: var(--accent);
+}
+
+.statusPropuesta {
+  background: rgba(245, 166, 35, 0.12);
+  color: var(--warn);
+}
+
+.statusCerrado {
+  background: rgba(38, 193, 122, 0.12);
+  color: var(--ok);
+}
+
+.statusPerdido {
+  background: rgba(240, 71, 71, 0.12);
+  color: var(--danger);
+}
+
+/* ── Empty state ──────────────────────────────────── */
+.empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-family: var(--mono);
+  color: var(--text3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
