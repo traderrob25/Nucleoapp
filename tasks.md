@@ -1,5 +1,5 @@
 # tasks.md — De CAOS a CEO / NucleoApp
-> v1.2 · 2026-03-30 · Fase 1 ✅ COMPLETA · Fase 2 abierta
+> v1.3 · 2026-03-31 · Fase 1 ✅ COMPLETA · Fase 2 en progreso
 
 ---
 
@@ -24,57 +24,24 @@
 
 ---
 
-## 🔴 TAREA ACTIVA — TASK-007
+## ✅ FASE 2 — COMPLETADAS
 
-**IntakeForm — Server Action → tabla leads**
+| Task | Descripción | Estado |
+|---|---|---|
+| TASK-007 | IntakeForm Server Action → tabla leads | ✅ |
+| TASK-008 | LeadsTable con datos reales desde Supabase | ✅ |
 
-```
-Archivos a crear:
-  src/app/(dashboard)/overview/page.tsx
-  src/components/command-center/IntakeForm/IntakeForm.tsx
-  src/components/command-center/IntakeForm/IntakeForm.module.css
-  src/app/actions/leads.ts   ← Server Action
-
-Flujo:
-  IntakeForm (use client) → Server Action → INSERT leads → revalidatePath('/dashboard/overview')
-
-Campos del formulario:
-  name     (texto — requerido)
-  phone    (texto)
-  service  (select)
-  budget   (select)
-  source   (select)
-
-Campos que va el Server Action:
-  account_id → del usuario autenticado (createClient server)
-  score: 0   → Make.com lo actualiza en TASK-011
-  status: 'nuevo' → default
-
-Validación: Zod — name requerido, phone opcional
-
-Criterio de done:
-  ✓ Formulario visible en /dashboard/overview
-  ✓ Submit → lead aparece en Supabase Table Editor
-  ✓ Sin errores TypeScript
-  ✓ Estilos dark theme consistentes con variables.css
-```
+**Notas técnicas Fase 2:**
+- /dev-login agregado (bypass Magic Link rate limit para testing)
+- Supabase Email Provider: Email+Password habilitado, Confirm email desactivado
+- Libro Express migrado a hexada-prod (ainebmbluocoxlyvctej)
+- ScalingUp exclusivo para NucleoApp desde 2026-03-31
+- --info: #3B82F6 agregado a variables.css
+- src/types/lead.ts creado con tipo Lead
 
 ---
 
-## 📋 BACKLOG FASE 2
-
-### TASK-008 — LeadsTable con datos reales
-```
-src/components/dashboard/LeadsTable/LeadsTable.tsx + .module.css
-
-Query: SELECT * FROM leads
-       WHERE account_id = $1
-       ORDER BY created_at DESC
-       LIMIT 10
-
-Mostrar: name, score (badge color por rango), status (tag), created_at
-Criterio: tabla con leads reales, actualiza tras IntakeForm submit
-```
+## 🔴 TAREA ACTIVA — TASK-009
 
 ### TASK-009 — PipelineStages con conteos reales
 ```
