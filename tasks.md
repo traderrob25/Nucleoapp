@@ -1,5 +1,5 @@
 # tasks.md — De CAOS a CEO / NucleoApp
-> v1.5 · 2026-04-01 · Fase 3 Skills IA ✅ COMPLETA · Fase 4 abierta
+> v1.6 · 2026-04-01 · Fase 3 ✅ COMPLETA · Fase 4 abierta
 
 ---
 
@@ -15,104 +15,92 @@
 | TASK-012 | intake-analyzer skill | aaaeffa | ✅ |
 | TASK-013 | playbook-mapper skill | aaaeffa | ✅ |
 | TASK-014 | proposal-writer skill | aaaeffa | ✅ |
+| TASK-015 | ProposalViewer UI | 6332cc0 | ✅ |
 
 **Confirmación en producción:**
 ```
-lead_id: 8e9dcb5f-c5a1-4307-a486-fa1e853f18d2 (Claudio)
+Skills ejecutados para Claudio (8e9dcb5f):
+  intake-analyzer  ✅ tier: parche · score: 25
+  playbook-mapper  ✅ Velocity Agent → Quote Engine
+  proposal-writer  ✅ propuesta markdown generada
 
-skill_outputs:
-  intake-analyzer  → 2026-04-01 19:21:10 ✅
-  playbook-mapper  → 2026-04-01 19:21:17 ✅
-  proposal-writer  → 2026-04-01 19:21:31 ✅
-
-Propuesta generada:
-  Tier: parche ($497/mes)
-  Playbooks: Velocity Agent → Quote Engine
-  CTA: llamada 30 min
+ProposalViewer:
+  ✅ Renderizado markdown (H1, H2 teal, listas, bold)
+  ✅ Botón "Copiar propuesta" → "✓ Copiado"
+  ✅ Botón "Cerrar" funcional
+  ✅ Test page eliminada antes del commit
 ```
 
-**Notas técnicas Fase 3:**
-- Cadena secuencial: intake-analyzer → playbook-mapper → proposal-writer
-- Si skill anterior no existe → se ejecuta automáticamente en cadena
-- Output en markdown limpio — strip de backticks aplicado
-- Guardado versionado en skill_outputs (version: 1)
-- SUPABASE_SERVICE_ROLE_KEY para writes de sistema
-
-**Flujo completo en producción:**
+**Flujo completo Fase 3 en producción:**
 ```
-POST /api/skills/proposal-writer { lead_id }
-  → lee/ejecuta intake-analyzer
-  → lee/ejecuta playbook-mapper
-  → genera propuesta markdown
-  → guarda 3 filas en skill_outputs
-  → retorna { success: true, proposal: { markdown, lead_name } }
+LeadsTable → click "⚡ Propuesta"
+  → loading state por fila
+  → POST /api/skills/proposal-writer { lead_id }
+  → intake-analyzer + playbook-mapper + proposal-writer en cadena
+  → ProposalViewer con markdown renderizado
+  → Copiar o cerrar
 ```
 
 ---
 
-## 🔴 TAREA ACTIVA — TASK-015
+## 🔴 TAREA ACTIVA — TASK-016
 
-**UI de Skills — mostrar propuesta en el dashboard**
+**Quote Engine — Panel de propuestas**
 
 ```
-Objetivo: El dueño de agencia puede generar y ver la propuesta
-          desde el dashboard sin usar curl.
+Objetivo: Gestionar propuestas formales (quotes) con
+          seguimiento de estado y view tracking.
 
 Archivos a crear:
-  src/components/command-center/ProposalViewer/
-    ProposalViewer.tsx
-    ProposalViewer.module.css
+  src/app/(dashboard)/quotes/page.tsx
+  src/components/dashboard/QuotePanel/
+    QuotePanel.tsx
+    QuotePanel.module.css
 
-Actualizar:
-  src/app/(dashboard)/overview/page.tsx
-  → Agregar botón "Generar Propuesta" en cada fila de LeadsTable
-  → Al hacer click → POST /api/skills/proposal-writer
-  → Mostrar resultado en ProposalViewer (modal o sección expandible)
-
-ProposalViewer:
-  - Renderizar markdown como HTML (usar marked o similar)
-  - Botón "Copiar propuesta"
-  - Botón "Nueva propuesta" (regenerar)
-  - Dark theme consistente con variables.css
+Flujo:
+  1. Desde ProposalViewer → botón "Guardar como Quote"
+     → INSERT quotes (client_name, service, amount, status: 'borrador')
+  2. /dashboard/quotes → lista de quotes con status y view_count
+  3. View tracking: cada vez que el lead abre el link
+     → view_count +1 → alerta en dashboard
 
 Criterio de done:
-  ✓ Click en lead → genera propuesta → se muestra en UI
-  ✓ Sin errores TypeScript
-  ✓ Build limpio
+  ✓ Quote creado desde propuesta
+  ✓ Lista de quotes visible
+  ✓ Status actualizable (borrador → enviada → vista → cerrada)
 ```
 
 ---
 
 ## 📋 BACKLOG FASE 4
 
-### TASK-016 — Quote Engine (Panel de propuestas)
 ### TASK-017 — account-snapshot skill (cliente)
 ### TASK-018 — roadmap-generator skill (cliente)
 ### TASK-019 — Panel cliente NucleoApp
+### TASK-020 — AlertFeed con alertas reales
 
 ---
 
-## 📌 Prompt de Inicio — TASK-015
+## 📌 Prompt de Inicio — TASK-016
 
 ```
-[INICIO DE SESIÓN — Fase 3 · TASK-015]
+[INICIO DE SESIÓN — Fase 4 · TASK-016]
 
 Proyecto: NucleoApp / De CAOS a CEO
 URL: nucleoapp.vercel.app
-Fase actual: 3 — Skills IA · UI de propuesta
-Tarea activa: TASK-015 — ProposalViewer en dashboard
+Fase actual: 4 — Quote Engine
+Tarea activa: TASK-016 — Quote Engine panel
 
-Stack: Next.js 16 · Supabase · CSS Modules · Claude API
-Skills en producción: intake-analyzer ✅ playbook-mapper ✅ proposal-writer ✅
+Stack: Next.js 16 · Supabase · CSS Modules
+Tabla quotes ya existe en Supabase ✅
 
 Reglas:
 - Plan → Confirm → Code
 - Max ~300 líneas por archivo
 - CSS Module por componente
-- 'use client' solo donde sea necesario
 
 Lee CLAUDE.md → confirma:
-"Entendido. Fase 3 · TASK-015 · Modo DEV. ¿Arrancamos?"
+"Entendido. Fase 4 · TASK-016 · Modo DEV. ¿Arrancamos?"
 ```
 
 ---
@@ -121,7 +109,7 @@ Lee CLAUDE.md → confirma:
 
 | Fecha | Nota |
 |---|---|
-| 2026-03-30 | Fase 1 completa. nucleoapp.vercel.app live. |
-| 2026-03-31 | Fase 2 completa. Command Center + Velocity Agent. |
-| 2026-04-01 | Fase 3 completa. 3 Skills IA en producción. |
-| — | Próxima sesión: TASK-015 — ProposalViewer en UI |
+| 2026-03-30 | Fase 1 completa. |
+| 2026-03-31 | Fase 2 completa. Velocity Agent activo. |
+| 2026-04-01 | Fase 3 completa. 3 Skills IA + ProposalViewer en producción. |
+| — | Próxima sesión: TASK-016 — Quote Engine |

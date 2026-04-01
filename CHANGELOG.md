@@ -3,33 +3,34 @@
 
 ---
 
-## [Unreleased] — Fase 3 UI en curso
+## [Unreleased] — Fase 4 en curso
 
 ### En progreso
-- TASK-015: ProposalViewer — UI de propuesta en dashboard
+- TASK-016: Quote Engine panel
 
 ---
 
-## [0.6.0] — 2026-04-01 · Fase 3 Skills IA ✅
+## [0.7.0] — 2026-04-01 · Fase 3 completa ✅
 
 ### Added
-- `feat: intake-analyzer + playbook-mapper + proposal-writer skills` (aaaeffa)
-- Cadena secuencial de 3 skills ejecutada en un solo POST
-- Propuesta generada en markdown para Claudio confirmada en producción
-- 3 filas en skill_outputs: intake-analyzer, playbook-mapper, proposal-writer
+- `feat: ProposalViewer UI — propuesta desde LeadsTable` (6332cc0)
+- Botón "⚡ Propuesta" por fila en LeadsTable
+- Loading state por fila durante generación
+- marked instalado para renderizado markdown → HTML
+- Botón "Copiar propuesta" con feedback visual "✓ Copiado"
 
-### Architecture
-- Skills como funciones puras en src/lib/skills/
-- Routes en src/app/api/skills/[skill]/route.ts
-- Cadena automática: si skill previo no existe → se ejecuta antes
-- Strip de backticks en parser de Claude API response
-- service_role_key para writes en skill_outputs
+### Fixed
+- Test page eliminada antes del commit (src/app/test-proposal)
+- LeadsTable convertido a Client Component para manejar onClick
 
-### Confirmado en producción
-- lead_id: 8e9dcb5f (Claudio)
-- Tier detectado: parche — $497/mes
-- Playbooks: Velocity Agent → Quote Engine
-- Tiempo total cadena: ~21 segundos
+---
+
+## [0.6.0] — 2026-04-01 · Skills IA en producción
+
+### Added
+- `feat: intake-analyzer + playbook-mapper + proposal-writer` (aaaeffa)
+- Cadena de 3 skills en 21 segundos
+- skill_outputs en Supabase con versionado
 
 ---
 
