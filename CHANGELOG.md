@@ -3,10 +3,26 @@
 
 ---
 
-## [Unreleased] — Fase 4 en curso
+## [Unreleased] — Fase 5 en curso
+- TASK-020: AlertFeed con alertas reales
 
-### En progreso
-- TASK-016: Quote Engine panel
+---
+
+## [0.8.0] — 2026-04-01 · Fase 4 completa ✅
+
+### Added
+- `feat: Quote Engine — gestión de propuestas con tracking` (848c91f)
+- `feat: account-snapshot skill — diagnóstico ejecutivo` (edcd229)
+- `feat: roadmap-generator + Panel cliente /dashboard/mi-plan` (8a3e063)
+- Nueva sección "Mi Plan" en Sidebar
+- SnapshotCard: fase (caos/sistema/ceo), cuellos de botella y quick wins
+- RoadmapView: Plan de 90 días con períodos e hitos
+- HealthMeter circular (SVG) con color dinámico por puntaje
+- Endpoint `/api/quotes/view` para tracking de propuestas abiertas por el cliente
+- RPC `increment_view_count` en Supabase para evitar race conditions
+
+### Updated
+- `ProposalViewer`: botón "Guardar como Quote" integrado
 
 ---
 
@@ -19,18 +35,10 @@
 - marked instalado para renderizado markdown → HTML
 - Botón "Copiar propuesta" con feedback visual "✓ Copiado"
 
-### Fixed
-- Test page eliminada antes del commit (src/app/test-proposal)
-- LeadsTable convertido a Client Component para manejar onClick
-
 ---
 
 ## [0.6.0] — 2026-04-01 · Skills IA en producción
-
-### Added
 - `feat: intake-analyzer + playbook-mapper + proposal-writer` (aaaeffa)
-- Cadena de 3 skills en 21 segundos
-- skill_outputs en Supabase con versionado
 
 ---
 

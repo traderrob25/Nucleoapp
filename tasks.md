@@ -1,98 +1,100 @@
 # tasks.md — De CAOS a CEO / NucleoApp
-> v1.6 · 2026-04-01 · Fase 3 ✅ COMPLETA · Fase 4 abierta
+> v1.7 · 2026-04-01 · Fase 4 ✅ COMPLETA · Fase 5 abierta
 
 ---
 
 ## ✅ FASE 1 COMPLETA · 2026-03-30
 ## ✅ FASE 2 COMPLETA · 2026-03-31
+## ✅ FASE 3 COMPLETA · 2026-04-01
 
 ---
 
-## ✅ FASE 3 COMPLETA · 2026-04-01
+## ✅ FASE 4 COMPLETA · 2026-04-01
 
 | Task | Descripción | Commit | Estado |
 |---|---|---|---|
-| TASK-012 | intake-analyzer skill | aaaeffa | ✅ |
-| TASK-013 | playbook-mapper skill | aaaeffa | ✅ |
-| TASK-014 | proposal-writer skill | aaaeffa | ✅ |
-| TASK-015 | ProposalViewer UI | 6332cc0 | ✅ |
+| TASK-016 | Quote Engine panel + view tracking | 848c91f | ✅ |
+| TASK-017 | account-snapshot skill | edcd229 | ✅ |
+| TASK-018 | roadmap-generator skill | 8a3e063 | ✅ |
+| TASK-019 | Panel cliente /dashboard/mi-plan | 8a3e063 | ✅ |
 
 **Confirmación en producción:**
 ```
-Skills ejecutados para Claudio (8e9dcb5f):
-  intake-analyzer  ✅ tier: parche · score: 25
-  playbook-mapper  ✅ Velocity Agent → Quote Engine
-  proposal-writer  ✅ propuesta markdown generada
+/dashboard/quotes:
+  ✅ Crear quote desde ProposalViewer
+  ✅ Status tracking (borrador → enviada → vista → cerrada)
+  ✅ View tracking: GET /api/quotes/view?id=UUID → view_count +1
+  ✅ "Copiar link" → URL de tracking para el cliente
 
-ProposalViewer:
-  ✅ Renderizado markdown (H1, H2 teal, listas, bold)
-  ✅ Botón "Copiar propuesta" → "✓ Copiado"
-  ✅ Botón "Cerrar" funcional
-  ✅ Test page eliminada antes del commit
+/dashboard/mi-plan:
+  ✅ SnapshotCard: fase CAOS · 3 cuellos · 3 quick wins
+  ✅ HealthMeter: nivel_salud 15% (rojo — Claudio con datos reales)
+  ✅ RoadmapView: "Escalando tu Agencia" · 6 períodos · 3 hitos
+  ✅ roadmap-generator en skill_outputs (14377e4f)
 ```
 
-**Flujo completo Fase 3 en producción:**
+**Skills en producción — mapa completo:**
 ```
-LeadsTable → click "⚡ Propuesta"
-  → loading state por fila
-  → POST /api/skills/proposal-writer { lead_id }
-  → intake-analyzer + playbook-mapper + proposal-writer en cadena
-  → ProposalViewer con markdown renderizado
-  → Copiar o cerrar
-```
+Internos (Command Center):
+  intake-analyzer   ✅ tier + score + diagnóstico
+  playbook-mapper   ✅ 4 playbooks priorizados
+  proposal-writer   ✅ propuesta markdown
 
----
-
-## 🔴 TAREA ACTIVA — TASK-016
-
-**Quote Engine — Panel de propuestas**
-
-```
-Objetivo: Gestionar propuestas formales (quotes) con
-          seguimiento de estado y view tracking.
-
-Archivos a crear:
-  src/app/(dashboard)/quotes/page.tsx
-  src/components/dashboard/QuotePanel/
-    QuotePanel.tsx
-    QuotePanel.module.css
-
-Flujo:
-  1. Desde ProposalViewer → botón "Guardar como Quote"
-     → INSERT quotes (client_name, service, amount, status: 'borrador')
-  2. /dashboard/quotes → lista de quotes con status y view_count
-  3. View tracking: cada vez que el lead abre el link
-     → view_count +1 → alerta en dashboard
-
-Criterio de done:
-  ✓ Quote creado desde propuesta
-  ✓ Lista de quotes visible
-  ✓ Status actualizable (borrador → enviada → vista → cerrada)
+Externos (Panel cliente):
+  account-snapshot  ✅ fase + salud + cuellos + quick wins
+  roadmap-generator ✅ plan 90 días por tier
 ```
 
 ---
 
-## 📋 BACKLOG FASE 4
+## 🔴 TAREA ACTIVA — TASK-020
 
-### TASK-017 — account-snapshot skill (cliente)
-### TASK-018 — roadmap-generator skill (cliente)
-### TASK-019 — Panel cliente NucleoApp
+**Fase 5 — Polish + Go-to-Market**
+
+```
+Prioridad 1 — AlertFeed con alertas reales:
+  src/components/command-center/AlertFeed/
+    AlertFeed.tsx (actualizar — datos reales)
+  Query: quotes con view_count > 0 recientes
+         leads sin actividad > 48h
+         quotes en status 'vista'
+
+Prioridad 2 — Onboarding flow:
+  src/app/(dashboard)/onboarding/page.tsx
+  → Primer login → completar perfil de agencia
+  → agency_name en tabla accounts
+  → Redirige a /dashboard/overview
+
+Prioridad 3 — Health ring con métricas reales:
+  Conectar HealthMeter del overview con datos reales
+  (nivel_salud del account-snapshot)
+```
+
+---
+
+## 📋 BACKLOG FASE 5
+
 ### TASK-020 — AlertFeed con alertas reales
+### TASK-021 — Onboarding flow
+### TASK-022 — Health ring overview con datos reales
+### TASK-023 — playbook-explainer skill
+### TASK-024 — Landing page (repo separado)
+### TASK-025 — Billing manual documentado (3 pilotos)
 
 ---
 
-## 📌 Prompt de Inicio — TASK-016
+## 📌 Prompt de Inicio — Fase 5
 
 ```
-[INICIO DE SESIÓN — Fase 4 · TASK-016]
+[INICIO DE SESIÓN — Fase 5 · TASK-020]
 
 Proyecto: NucleoApp / De CAOS a CEO
 URL: nucleoapp.vercel.app
-Fase actual: 4 — Quote Engine
-Tarea activa: TASK-016 — Quote Engine panel
+Fase actual: 5 — Polish + Go-to-Market
+Tarea activa: TASK-020 — AlertFeed con alertas reales
 
 Stack: Next.js 16 · Supabase · CSS Modules
-Tabla quotes ya existe en Supabase ✅
+Todo el sistema en producción ✅
 
 Reglas:
 - Plan → Confirm → Code
@@ -100,7 +102,7 @@ Reglas:
 - CSS Module por componente
 
 Lee CLAUDE.md → confirma:
-"Entendido. Fase 4 · TASK-016 · Modo DEV. ¿Arrancamos?"
+"Entendido. Fase 5 · TASK-020 · Modo DEV. ¿Arrancamos?"
 ```
 
 ---
@@ -109,7 +111,8 @@ Lee CLAUDE.md → confirma:
 
 | Fecha | Nota |
 |---|---|
-| 2026-03-30 | Fase 1 completa. |
+| 2026-03-30 | Fase 1 completa. nucleoapp.vercel.app live. |
 | 2026-03-31 | Fase 2 completa. Velocity Agent activo. |
-| 2026-04-01 | Fase 3 completa. 3 Skills IA + ProposalViewer en producción. |
-| — | Próxima sesión: TASK-016 — Quote Engine |
+| 2026-04-01 | Fase 3 completa. 3 Skills IA + ProposalViewer. |
+| 2026-04-01 | Fase 4 completa. Quote Engine + Panel cliente. |
+| — | Próxima sesión: TASK-020 — AlertFeed + Onboarding |
