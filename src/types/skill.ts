@@ -33,3 +33,19 @@ export interface AccountSnapshot {
   metrica_clave: string
   nivel_salud: number
 }
+
+export interface RoadmapPeriod {
+  periodo: string
+  enfoque: string
+  acciones: string[]
+  resultado_esperado: string
+}
+
+export interface Roadmap {
+  titulo: string
+  semanas: RoadmapPeriod[]
+  hito_30_dias: string
+  hito_60_dias: string
+  hito_90_dias: string
+  playbooks_activos: string[]
+}

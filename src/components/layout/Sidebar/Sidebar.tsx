@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/velocity',  label: 'Velocity',  id: 'velocity' },
   { href: '/dashboard/quotes',    label: 'Quotes',    id: 'quotes'   },
   { href: '/dashboard/reportes',  label: 'Reportes',  id: 'reportes' },
+  { href: '/dashboard/mi-plan',   label: 'Mi Plan',   id: 'mi-plan'  },
 ]
 
 interface SidebarProps {
