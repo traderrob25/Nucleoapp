@@ -1,0 +1,155 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+}
+
+.tableWrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.table thead tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px 16px;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover td {
+  background: var(--surface2);
+}
+
+.clientName {
+  color: var(--text) !important;
+  font-weight: 600;
+}
+
+.amount {
+  font-family: var(--mono);
+  color: var(--text);
+}
+
+.date {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+/* ── Badges ──────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: capitalize;
+}
+
+.statusBorrador { background: rgba(46, 67, 85, 0.4); color: var(--text3); }
+.statusEnviada  { background: rgba(8, 145, 178, 0.15); color: var(--accent); }
+.statusVista    { background: rgba(245, 166, 35, 0.12); color: var(--warn); }
+.statusRevision { background: rgba(59, 130, 246, 0.12); color: var(--info); }
+.statusCerrada  { background: rgba(38, 193, 122, 0.12); color: var(--ok); }
+.statusPerdida  { background: rgba(240, 71, 71, 0.12); color: var(--danger); }
+
+/* Pulse animation for 'vista' status with views */
+.pulse {
+  width: 6px;
+  height: 6px;
+  background: var(--warn);
+  border-radius: 50%;
+  animation: pulseAnime 2s infinite;
+}
+
+@keyframes pulseAnime {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(245, 166, 35, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 166, 35, 0); }
+}
+
+.viewCount {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ── Actions ──────────────────────────────────── */
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.statusSelect {
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text2);
+  font-size: 11px;
+  outline: none;
+  cursor: pointer;
+}
+
+.viewBtn, .copyBtn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.viewBtn:hover:not(:disabled), .copyBtn:hover {
+  background: var(--accent);
+  color: var(--surface);
+  border-color: var(--accent);
+}
+
+.viewBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

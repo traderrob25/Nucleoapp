@@ -33,7 +33,11 @@ function formatDate(iso: string): string {
 
 export function LeadsTable({ leads }: LeadsTableProps) {
   const [loadingId, setLoadingId] = useState<string | null>(null)
-  const [proposal, setProposal] = useState<{ markdown: string, leadName: string } | null>(null)
+  const [proposal, setProposal] = useState<{ 
+    markdown: string, 
+    leadName: string,
+    leadId: string
+  } | null>(null)
 
   const handleGenerateProposal = async (lead: Lead) => {
     try {
@@ -47,7 +51,7 @@ export function LeadsTable({ leads }: LeadsTableProps) {
       if (!res.ok) throw new Error('Error en API')
       const data = await res.json()
       
-      setProposal({ markdown: data.proposal, leadName: lead.name })
+      setProposal({ markdown: data.proposal, leadName: lead.name, leadId: lead.id })
     } catch (err) {
       alert('Error generando propuesta. Intenta de nuevo.')
     } finally {
@@ -115,6 +119,7 @@ export function LeadsTable({ leads }: LeadsTableProps) {
         <ProposalViewer
           markdown={proposal.markdown}
           leadName={proposal.leadName}
+          leadId={proposal.leadId}
           onClose={() => setProposal(null)}
         />
       )}
