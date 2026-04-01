@@ -1,13 +1,13 @@
 # plan.md — De CAOS a CEO / NucleoApp
-> v1.4 · 2026-03-31 · Fase 2 cerrada · Fase 3 abierta
+> v1.5 · 2026-04-01 · Fase 3 Skills IA cerrada
 
 ---
 
 ## Estado Actual
 
-**Fase activa:** 3 — Skills IA internos
+**Fase activa:** 3 — UI de propuesta (TASK-015)
 **URL producción:** nucleoapp.vercel.app
-**En producción hoy:** Command Center completo + Velocity Agent scoring automático
+**En producción:** Command Center + Velocity Agent + 3 Skills IA
 
 ---
 
@@ -17,30 +17,21 @@
 
 ---
 
-## Fase 3 — Skills IA Internos 🔴 EN CURSO
+## Fase 3 — Skills IA 🔄 EN CURSO (UI pendiente)
 
-**Criterio de éxito:** intake-analyzer + proposal-writer funcionando
-en el Command Center — de lead a propuesta en < 2 minutos.
-
-- [ ] TASK-012: `intake-analyzer` — análisis completo del lead
-- [ ] TASK-013: `playbook-mapper` — playbooks priorizados
-- [ ] TASK-014: `proposal-writer` — diagnóstico + propuesta 1 pág
-- [ ] VelocityPanel con stats reales (seguimientos, apertura WA)
-- [ ] Make.com Scenario 2: follow-up WhatsApp automático
+- [x] TASK-012: `intake-analyzer` ✅
+- [x] TASK-013: `playbook-mapper` ✅
+- [x] TASK-014: `proposal-writer` ✅
+- [ ] TASK-015: ProposalViewer UI — botón en LeadsTable → propuesta visible
 
 ---
 
 ## Fase 4 — Quote Engine + Skills Externos
 
-**Criterio de éxito:** Propuesta enviada al cliente, view_count activo,
-cliente ve su diagnóstico en NucleoApp.
-
-- [ ] `account-snapshot` — diagnóstico inicial cliente
-- [ ] `roadmap-generator` — plan 90 días por tier
-- [ ] `playbook-explainer` — fichas de playbooks
-- [ ] QuotePanel con generación real
-- [ ] PDF export
-- [ ] View tracking con alerta
+- [ ] TASK-016: Quote Engine panel
+- [ ] TASK-017: `account-snapshot` skill
+- [ ] TASK-018: `roadmap-generator` skill
+- [ ] TASK-019: Panel cliente NucleoApp
 
 ---
 
@@ -49,8 +40,7 @@ cliente ve su diagnóstico en NucleoApp.
 - [ ] Onboarding flow
 - [ ] Billing manual (3 pilotos)
 - [ ] Health ring con métricas reales
-- [ ] Landing page (repo separado)
-- [ ] `client-qa` skill
+- [ ] Landing page
 
 ---
 
@@ -59,7 +49,7 @@ cliente ve su diagnóstico en NucleoApp.
 | Métrica | Target | Estado |
 |---|---|---|
 | Agencias piloto | 3 | 0 — en construcción |
-| Propuestas con Quote Engine | 5+ | 0 — Fase 4 |
+| Propuestas generadas | 5+ | 1 (Claudio, curl) |
 | 1 deal cerrado | ✓ | pendiente |
-| Skills internos en prod | intake-analyzer + proposal-writer | Fase 3 |
-| Velocity Agent activo | ✓ | ✅ scoring funcionando |
+| Skills internos en prod | intake-analyzer + proposal-writer | ✅ los 3 |
+| Velocity Agent activo | ✓ | ✅ scoring automático |

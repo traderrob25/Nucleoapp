@@ -1,125 +1,118 @@
 # tasks.md — De CAOS a CEO / NucleoApp
-> v1.4 · 2026-03-31 · Fase 2 ✅ COMPLETA · Fase 3 abierta
+> v1.5 · 2026-04-01 · Fase 3 Skills IA ✅ COMPLETA · Fase 4 abierta
 
 ---
 
 ## ✅ FASE 1 COMPLETA · 2026-03-30
-
-| Task | Descripción | Estado |
-|---|---|---|
-| TASK-001 | Setup Next.js 16 App Router | ✅ |
-| TASK-002 | Design tokens CSS | ✅ |
-| TASK-003 | Supabase schema v1 + RLS | ✅ |
-| TASK-004 | Auth Magic Link + proxy.ts | ✅ |
-| TASK-005 | Dashboard shell | ✅ |
-| TASK-006 | Deploy → nucleoapp.vercel.app | ✅ |
+## ✅ FASE 2 COMPLETA · 2026-03-31
 
 ---
 
-## ✅ FASE 2 COMPLETA · 2026-03-31
+## ✅ FASE 3 COMPLETA · 2026-04-01
 
 | Task | Descripción | Commit | Estado |
 |---|---|---|---|
-| TASK-007 | IntakeForm Server Action → leads | feat: IntakeForm Server Action | ✅ |
-| TASK-008 | LeadsTable con datos reales | feat: LeadsTable datos reales | ✅ |
-| TASK-009 | PipelineStages con conteos reales | feat: PipelineStages conteos reales | ✅ |
-| TASK-010 | KpiCards con 4 métricas reales | feat: KpiCards métricas reales | ✅ |
-| TASK-011 | Velocity Agent → Claude API scoring | feat: Velocity Agent webhook + Claude API scoring (09d183a) | ✅ |
+| TASK-012 | intake-analyzer skill | aaaeffa | ✅ |
+| TASK-013 | playbook-mapper skill | aaaeffa | ✅ |
+| TASK-014 | proposal-writer skill | aaaeffa | ✅ |
 
-**Notas técnicas Fase 2:**
-- Zod v4: `.issues` en lugar de `.errors`
-- Auto-provision account con tier 'parche' en Server Action
-- Promise.all para queries paralelas en KpiCards
-- Libro Express migrado a hexada-prod — ScalingUp exclusivo NucleoApp
-- Velocity Agent: score calculado por Claude API (claude-sonnet-4-20250514)
-- Supabase webhook → Make.com → /api/leads/webhook → UPDATE score
-- Score de Claudio confirmado: 25 (Referido +25, presupuesto < $5k +0)
-- Make.com scenario: activar toggle ON para scoring automático
-
-**Flujo Velocity Agent en producción:**
+**Confirmación en producción:**
 ```
-IntakeForm submit
-→ INSERT leads (score=0)
-→ Supabase pg_net → Make.com webhook
-→ Make.com POST /api/leads/webhook
-→ Claude API genera score 0-100
-→ UPDATE leads SET score
-→ LeadsTable muestra score real
+lead_id: 8e9dcb5f-c5a1-4307-a486-fa1e853f18d2 (Claudio)
+
+skill_outputs:
+  intake-analyzer  → 2026-04-01 19:21:10 ✅
+  playbook-mapper  → 2026-04-01 19:21:17 ✅
+  proposal-writer  → 2026-04-01 19:21:31 ✅
+
+Propuesta generada:
+  Tier: parche ($497/mes)
+  Playbooks: Velocity Agent → Quote Engine
+  CTA: llamada 30 min
+```
+
+**Notas técnicas Fase 3:**
+- Cadena secuencial: intake-analyzer → playbook-mapper → proposal-writer
+- Si skill anterior no existe → se ejecuta automáticamente en cadena
+- Output en markdown limpio — strip de backticks aplicado
+- Guardado versionado en skill_outputs (version: 1)
+- SUPABASE_SERVICE_ROLE_KEY para writes de sistema
+
+**Flujo completo en producción:**
+```
+POST /api/skills/proposal-writer { lead_id }
+  → lee/ejecuta intake-analyzer
+  → lee/ejecuta playbook-mapper
+  → genera propuesta markdown
+  → guarda 3 filas en skill_outputs
+  → retorna { success: true, proposal: { markdown, lead_name } }
 ```
 
 ---
 
-## 🔴 TAREA ACTIVA — TASK-012
+## 🔴 TAREA ACTIVA — TASK-015
 
-**intake-analyzer skill — Claude API + Supabase**
+**UI de Skills — mostrar propuesta en el dashboard**
 
 ```
-Fase: 3 — Skills IA (internos)
+Objetivo: El dueño de agencia puede generar y ver la propuesta
+          desde el dashboard sin usar curl.
 
 Archivos a crear:
-  src/lib/skills/intake-analyzer.ts
-  src/app/api/skills/intake-analyzer/route.ts
+  src/components/command-center/ProposalViewer/
+    ProposalViewer.tsx
+    ProposalViewer.module.css
 
-Función:
-  Leer datos completos de un lead desde Supabase
-  → Analizar con Claude API
-  → Retornar:
-    {
-      tier_recomendado: 'parche' | 'operador' | 'ceo',
-      score: number,
-      razon: string,
-      puntos_fuertes: string[],
-      puntos_debiles: string[],
-      siguiente_accion: string
-    }
-  → Guardar en skill_outputs (tabla ya existe en Supabase)
+Actualizar:
+  src/app/(dashboard)/overview/page.tsx
+  → Agregar botón "Generar Propuesta" en cada fila de LeadsTable
+  → Al hacer click → POST /api/skills/proposal-writer
+  → Mostrar resultado en ProposalViewer (modal o sección expandible)
+
+ProposalViewer:
+  - Renderizar markdown como HTML (usar marked o similar)
+  - Botón "Copiar propuesta"
+  - Botón "Nueva propuesta" (regenerar)
+  - Dark theme consistente con variables.css
 
 Criterio de done:
-  ✓ POST /api/skills/intake-analyzer con lead_id → análisis completo
-  ✓ Output guardado en skill_outputs
+  ✓ Click en lead → genera propuesta → se muestra en UI
   ✓ Sin errores TypeScript
+  ✓ Build limpio
 ```
 
 ---
 
-## 📋 BACKLOG FASE 3
+## 📋 BACKLOG FASE 4
 
-### TASK-013 — playbook-mapper skill
-```
-Input: output de intake-analyzer
-Output: lista priorizada de playbooks con justificación
-```
-
-### TASK-014 — proposal-writer skill
-```
-Input: tier + playbooks + precios
-Output: diagnóstico narrativo + propuesta 1 página (markdown)
-Guardar en skill_outputs
-```
+### TASK-016 — Quote Engine (Panel de propuestas)
+### TASK-017 — account-snapshot skill (cliente)
+### TASK-018 — roadmap-generator skill (cliente)
+### TASK-019 — Panel cliente NucleoApp
 
 ---
 
-## 📌 Prompt de Inicio — Fase 3
+## 📌 Prompt de Inicio — TASK-015
 
 ```
-[INICIO DE SESIÓN — Fase 3 · TASK-012]
+[INICIO DE SESIÓN — Fase 3 · TASK-015]
 
 Proyecto: NucleoApp / De CAOS a CEO
 URL: nucleoapp.vercel.app
-Fase actual: 3 — Skills IA internos
-Tarea activa: TASK-012 — intake-analyzer skill
+Fase actual: 3 — Skills IA · UI de propuesta
+Tarea activa: TASK-015 — ProposalViewer en dashboard
 
-Stack: Next.js 16 · Supabase · Claude API (claude-sonnet-4-20250514)
-ANTHROPIC_API_KEY ya está en Vercel env vars ✅
+Stack: Next.js 16 · Supabase · CSS Modules · Claude API
+Skills en producción: intake-analyzer ✅ playbook-mapper ✅ proposal-writer ✅
 
 Reglas:
 - Plan → Confirm → Code
 - Max ~300 líneas por archivo
-- Output de skills se guarda en tabla skill_outputs
-- Usar SUPABASE_SERVICE_ROLE_KEY para writes de sistema
+- CSS Module por componente
+- 'use client' solo donde sea necesario
 
 Lee CLAUDE.md → confirma:
-"Entendido. Fase 3 · TASK-012 · Modo DEV. ¿Arrancamos?"
+"Entendido. Fase 3 · TASK-015 · Modo DEV. ¿Arrancamos?"
 ```
 
 ---
@@ -129,6 +122,6 @@ Lee CLAUDE.md → confirma:
 | Fecha | Nota |
 |---|---|
 | 2026-03-30 | Fase 1 completa. nucleoapp.vercel.app live. |
-| 2026-03-31 | Fase 2 completa. Command Center + Velocity Agent en producción. |
-| 2026-03-31 | Make.com scenario configurado. Activar toggle ON para scoring automático. |
-| — | Próxima sesión: TASK-012 — intake-analyzer skill |
+| 2026-03-31 | Fase 2 completa. Command Center + Velocity Agent. |
+| 2026-04-01 | Fase 3 completa. 3 Skills IA en producción. |
+| — | Próxima sesión: TASK-015 — ProposalViewer en UI |
