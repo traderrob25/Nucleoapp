@@ -1,5 +1,9 @@
+'use client'
+
+import { useState } from 'react'
 import type { Lead } from '@/types/lead'
 import styles from './LeadsTable.module.css'
+import { ProposalViewer } from '@/components/command-center/ProposalViewer/ProposalViewer'
 
 interface LeadsTableProps {
   leads: Lead[]
@@ -28,6 +32,29 @@ function formatDate(iso: string): string {
 }
 
 export function LeadsTable({ leads }: LeadsTableProps) {
+  const [loadingId, setLoadingId] = useState<string | null>(null)
+  const [proposal, setProposal] = useState<{ markdown: string, leadName: string } | null>(null)
+
+  const handleGenerateProposal = async (lead: Lead) => {
+    try {
+      setLoadingId(lead.id)
+      const res = await fetch('/api/skills/proposal-writer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lead_id: lead.id })
+      })
+
+      if (!res.ok) throw new Error('Error en API')
+      const data = await res.json()
+      
+      setProposal({ markdown: data.proposal, leadName: lead.name })
+    } catch (err) {
+      alert('Error generando propuesta. Intenta de nuevo.')
+    } finally {
+      setLoadingId(null)
+    }
+  }
+
   if (leads.length === 0) {
     return (
       <div className={styles.empty}>
@@ -49,6 +76,7 @@ export function LeadsTable({ leads }: LeadsTableProps) {
               <th>Score</th>
               <th>Estado</th>
               <th>Fecha</th>
+              <th>Acción</th>
             </tr>
           </thead>
           <tbody>
@@ -68,11 +96,28 @@ export function LeadsTable({ leads }: LeadsTableProps) {
                   </span>
                 </td>
                 <td className={styles.date}>{formatDate(lead.created_at)}</td>
+                <td>
+                  <button 
+                    className={styles.proposalBtn}
+                    onClick={() => handleGenerateProposal(lead)}
+                    disabled={loadingId === lead.id}
+                  >
+                    {loadingId === lead.id ? 'Cargando...' : '⚡ Propuesta'}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {proposal && (
+        <ProposalViewer
+          markdown={proposal.markdown}
+          leadName={proposal.leadName}
+          onClose={() => setProposal(null)}
+        />
+      )}
     </div>
   )
 }
