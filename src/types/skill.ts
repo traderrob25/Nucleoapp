@@ -24,3 +24,12 @@ export interface ProposalOutput {
   markdown:  string
   lead_name: string
 }
+
+export interface AccountSnapshot {
+  fase: 'caos' | 'sistema' | 'ceo'
+  resumen: string
+  cuellos_de_botella: string[]
+  quick_wins: string[]
+  metrica_clave: string
+  nivel_salud: number
+}
