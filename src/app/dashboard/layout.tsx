@@ -34,6 +34,10 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   const tier = (account?.tier ?? 'parche') as TierID
   const agencyName = account?.agency_name ?? null
 
+  if (!agencyName) {
+    redirect('/onboarding')
+  }
+
   return (
     <div className={styles.shell}>
       <Topbar userEmail={user.email ?? ''} agencyName={agencyName} />

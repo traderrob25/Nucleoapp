@@ -3,6 +3,8 @@ import { IntakeForm } from '@/components/command-center/IntakeForm/IntakeForm'
 import { LeadsTable } from '@/components/dashboard/LeadsTable/LeadsTable'
 import { PipelineStages } from '@/components/dashboard/PipelineStages/PipelineStages'
 import { KpiCard } from '@/components/dashboard/KpiCard/KpiCard'
+import { AlertFeed, QuoteVista, LeadInactivo, QuoteBorrador } from '@/components/command-center/AlertFeed/AlertFeed'
+import { HealthRing } from '@/components/dashboard/HealthRing/HealthRing'
 import type { Lead } from '@/types/lead'
 import styles from './overview.module.css'
 
@@ -15,6 +17,10 @@ const EMPTY_DATA = {
   openQuotes:  0,
   closedLeads: 0,
   closureRate: 0,
+  quotesVistas: [] as QuoteVista[],
+  leadsSinActividad: [] as LeadInactivo[],
+  quotesBorrador: [] as QuoteBorrador[],
+  nivelSalud: 0,
 }
 
 async function getPageData(userId: string) {
@@ -31,6 +37,8 @@ async function getPageData(userId: string) {
   const accountId = account.id
   const weekAgo   = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
 
+  const hace48h = new Date(Date.now() - 48*60*60*1000).toISOString()
+
   const [
     { data: leads },
     { data: allStatuses },
@@ -38,6 +46,10 @@ async function getPageData(userId: string) {
     { count: openQuotesCount },
     { count: closedLeadsCount },
     { count: totalLeadsCount },
+    { data: quotesVistasData },
+    { data: leadsSinActividadData },
+    { data: quotesBorradorData },
+    { data: snapshotData },
   ] = await Promise.all([
     supabase
       .from('leads')
@@ -73,6 +85,38 @@ async function getPageData(userId: string) {
       .from('leads')
       .select('id', { count: 'exact', head: true })
       .eq('account_id', accountId),
+
+    supabase
+      .from('quotes')
+      .select('id, client_name, view_count, updated_at')
+      .eq('account_id', accountId)
+      .eq('status', 'vista')
+      .order('updated_at', { ascending: false })
+      .limit(3),
+
+    supabase
+      .from('leads')
+      .select('id, name, status, updated_at')
+      .eq('account_id', accountId)
+      .eq('status', 'nuevo')
+      .lt('updated_at', hace48h)
+      .limit(3),
+
+    supabase
+      .from('quotes')
+      .select('id, client_name, amount, created_at')
+      .eq('account_id', accountId)
+      .eq('status', 'borrador')
+      .order('created_at', { ascending: false })
+      .limit(2),
+
+    supabase
+      .from('skill_outputs')
+      .select('output_data')
+      .eq('account_id', accountId)
+      .eq('skill_name', 'account-snapshot')
+      .order('created_at', { ascending: false })
+      .limit(1)
   ])
 
   const stages = Object.fromEntries(STAGE_KEYS.map((k) => [k, 0]))
@@ -91,6 +135,10 @@ async function getPageData(userId: string) {
     openQuotes:  openQuotesCount ?? 0,
     closedLeads: closed,
     closureRate,
+    quotesVistas: quotesVistasData ?? [],
+    leadsSinActividad: leadsSinActividadData ?? [],
+    quotesBorrador: quotesBorradorData ?? [],
+    nivelSalud: snapshotData?.[0]?.output_data?.nivel_salud ?? 0,
   }
 }
 
@@ -98,7 +146,7 @@ export default async function OverviewPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const { leads, stages, leadsWeek, openQuotes, closedLeads, closureRate } =
+  const { leads, stages, leadsWeek, openQuotes, closedLeads, closureRate, quotesVistas, leadsSinActividad, quotesBorrador, nivelSalud } =
     user ? await getPageData(user.id) : EMPTY_DATA
 
   return (
@@ -135,6 +183,12 @@ export default async function OverviewPage() {
         />
       </div>
 
+      <HealthRing nivelSalud={nivelSalud} />
+      <AlertFeed 
+        quotesVistas={quotesVistas} 
+        leadsSinActividad={leadsSinActividad} 
+        quotesBorrador={quotesBorrador} 
+      />
       <PipelineStages stages={stages} />
       <IntakeForm />
       <LeadsTable leads={leads} />

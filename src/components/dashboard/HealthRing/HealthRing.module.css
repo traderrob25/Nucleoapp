@@ -1,0 +1,74 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--bg-surface, #111);
+  border: 1px solid var(--border-color, #222);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.ringWrapper {
+  width: 80px;
+  height: 80px;
+}
+
+.circularChart {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 250px;
+}
+
+.circleBg {
+  fill: none;
+  stroke: var(--border-color, #333);
+  stroke-width: 3.8;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s ease-out;
+}
+
+.percentage {
+  font-family: var(--font-primary, 'Inter', sans-serif);
+  font-size: 10px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.label {
+  font-family: var(--font-primary, 'Inter', sans-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  margin: 0;
+}
+
+.actionButton {
+  background-color: var(--accent-primary, #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: var(--font-primary, 'Inter', sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.actionButton:hover {
+  opacity: 0.9;
+}
